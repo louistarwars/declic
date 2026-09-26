@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 /// Configuration injectée à la compilation :
 ///   flutter build apk --dart-define=SUPABASE_URL=... --dart-define=SUPABASE_ANON_KEY=...
 class AppConfig {
@@ -11,6 +13,13 @@ class AppConfig {
 
   static const appName = 'Déclic';
 
-  /// Lien profond vers l'app (à ajouter dans Supabase > Authentication > URL Configuration).
-  static const authRedirectUrl = 'com.louistarwars.declic://login-callback/';
+  /// Version web (PWA) pour les iPhone, hébergée sur GitHub Pages.
+  static const webAppUrl = 'https://louistarwars.github.io/declic/';
+
+  /// Dernier APK Android.
+  static const androidDownloadUrl = 'https://github.com/louistarwars/declic/releases/latest';
+
+  /// Retour après un lien reçu par e-mail (à autoriser dans Supabase > Authentication > URL Configuration).
+  static String get authRedirectUrl =>
+      kIsWeb ? '${Uri.base.origin}${Uri.base.path}' : 'com.louistarwars.declic://login-callback/';
 }

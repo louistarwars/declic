@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../models.dart';
@@ -200,6 +201,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         loading: _loading,
                         onPressed: _submit,
                       ),
+                      if (kIsWeb) ...[const SizedBox(height: 24), const _InstallTip()],
                     ],
                   ),
                 ),
@@ -322,6 +324,37 @@ class _NewPasswordDialogState extends State<NewPasswordDialog> {
         onSubmitted: (_) => _save(),
       ),
       actions: [TextButton(onPressed: _loading ? null : _save, child: const Text('Enregistrer'))],
+    );
+  }
+}
+
+/// Version web : explique comment installer Déclic sur l'écran d'accueil d'un iPhone.
+class _InstallTip extends StatelessWidget {
+  const _InstallTip();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: const Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('📲', style: TextStyle(fontSize: 22)),
+          SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'Sur iPhone : dans Safari, touche Partager puis « Sur l\'écran d\'accueil » '
+              'pour installer Déclic comme une vraie app.',
+              style: TextStyle(color: AppColors.textDim, height: 1.35),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

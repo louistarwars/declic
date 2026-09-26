@@ -168,35 +168,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                _Card(
-                  children: [
-                    const _CardTitle('🔔 Notifications'),
-                    SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      value: n.enabled,
-                      title: const Text('Défi du jour'),
-                      subtitle: const Text('Le thème du jour chaque matin'),
-                      onChanged: (v) => _saveNotif(n.copyWith(enabled: v)),
-                    ),
-                    if (n.enabled)
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: const Text('Heure du rappel'),
-                        trailing: Pill(
-                          label: '${n.hour.toString().padLeft(2, '0')}:${n.minute.toString().padLeft(2, '0')}',
-                          icon: '⏰',
+                if (!NotificationService.instance.isSupported)
+                  const _Card(
+                    children: [
+                      _CardTitle('🔔 Notifications'),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          'Les rappels quotidiens sont disponibles dans l\'app Android. '
+                          'Sur iPhone, pense à ouvrir Déclic chaque jour pour découvrir le défi !',
+                          style: TextStyle(color: AppColors.textDim, height: 1.3),
                         ),
-                        onTap: _pickTime,
                       ),
-                    SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      value: n.voteReminder,
-                      title: const Text('Rappel de vote'),
-                      subtitle: const Text('Quand les votes s\'ouvrent'),
-                      onChanged: (v) => _saveNotif(n.copyWith(voteReminder: v)),
-                    ),
-                  ],
-                ),
+                    ],
+                  )
+                else
+                  _Card(
+                    children: [
+                      const _CardTitle('🔔 Notifications'),
+                      SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        value: n.enabled,
+                        title: const Text('Défi du jour'),
+                        subtitle: const Text('Le thème du jour chaque matin'),
+                        onChanged: (v) => _saveNotif(n.copyWith(enabled: v)),
+                      ),
+                      if (n.enabled)
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Heure du rappel'),
+                          trailing: Pill(
+                            label: '${n.hour.toString().padLeft(2, '0')}:${n.minute.toString().padLeft(2, '0')}',
+                            icon: '⏰',
+                          ),
+                          onTap: _pickTime,
+                        ),
+                      SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        value: n.voteReminder,
+                        title: const Text('Rappel de vote'),
+                        subtitle: const Text('Quand les votes s\'ouvrent'),
+                        onChanged: (v) => _saveNotif(n.copyWith(voteReminder: v)),
+                      ),
+                    ],
+                  ),
                 const SizedBox(height: 14),
                 const _Card(
                   children: [

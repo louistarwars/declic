@@ -179,7 +179,8 @@ class Api {
     String? caption,
     Submission? replacing,
   }) async {
-    final rand = Random().nextInt(1 << 32).toRadixString(36);
+    final rand =
+        '${DateTime.now().millisecondsSinceEpoch.toRadixString(36)}${Random().nextInt(1 << 30).toRadixString(36)}';
     final path = '${challenge.groupId}/${challenge.id}/${myId}_$rand.jpg';
     await _db.storage
         .from('photos')

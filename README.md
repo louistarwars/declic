@@ -2,6 +2,11 @@
 
 **Le défi photo du jour entre potes.** Chaque jour, ton groupe reçoit un thème (« Quelque chose de bleu », « Ta tasse de café », « Le pire stylo de ta trousse »…). Chacun poste sa photo, puis tout le monde vote pour la plus **drôle** 😂, la plus **belle** 😍 et la plus **originale** 🤯. Les votes rapportent des points, et un classement désigne le champion de chaque saison (un mois).
 
+## Jouer
+
+- 🤖 **Android** : télécharge l'APK dans les [Releases](https://github.com/louistarwars/declic/releases/latest).
+- 📱 **iPhone** (et tout navigateur) : ouvre **<https://louistarwars.github.io/declic/>** dans Safari, puis touche **Partager → « Sur l'écran d'accueil »**. Déclic s'installe comme une vraie app, sans App Store et sans licence Apple. Tout le monde joue dans les mêmes groupes.
+
 ## Fonctionnalités
 
 - **Groupes privés** : création, invitation par code à 6 caractères, partage du code
@@ -21,7 +26,7 @@
 
 - **App** : Flutter (Android)
 - **Backend** : [Supabase](https://supabase.com) (auth, Postgres avec RLS, stockage des photos). Toute la logique du jeu (phases, points) tourne côté serveur dans `supabase/schema.sql`.
-- **CI** : GitHub Actions compile un APK et un AAB signés à chaque push. Chaque tag `v*` publie une Release.
+- **CI** : GitHub Actions compile un APK et un AAB signés à chaque push, et déploie la version web sur GitHub Pages. Chaque tag `v*` publie une Release.
 
 ## Mise en route
 
@@ -29,7 +34,7 @@
 
 1. Crée un projet sur <https://supabase.com/dashboard>.
 2. **SQL Editor → New query** : colle le contenu de [`supabase/schema.sql`](supabase/schema.sql), puis clique sur **Run**.
-3. **Authentication → URL Configuration → Redirect URLs** : ajoute `com.louistarwars.declic://login-callback/` (liens « mot de passe oublié » et confirmation d'e-mail qui rouvrent l'app).
+3. **Authentication → URL Configuration → Redirect URLs** : ajoute `com.louistarwars.declic://login-callback/` et `https://louistarwars.github.io/declic/` (liens « mot de passe oublié » et confirmation d'e-mail qui rouvrent l'app).
 4. **Authentication → Sign In / Providers → Email** : désactive *Confirm email* si tu veux que tes amis puissent jouer tout de suite (facultatif).
 5. **Project Settings → API** : récupère la *Project URL* et la clé *anon / publishable*.
 
@@ -70,4 +75,5 @@ Le fichier `.aab` de la release s'envoie tel quel sur la Google Play Console.
 ## Notes
 
 - Le jeu vit à l'heure de Paris (`Europe/Paris`), à la fois dans `supabase/schema.sql` et dans `lib/config.dart`.
+- La version web n'a pas de rappels quotidiens : ils n'existent que dans l'app Android.
 - Les notifications sont programmées localement sur le téléphone. Les défis des 7 prochains jours sont générés à l'avance, ce qui permet d'afficher le vrai thème dans la notification, même application fermée.

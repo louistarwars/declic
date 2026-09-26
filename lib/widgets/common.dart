@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../config.dart';
 import '../models.dart';
 import '../services/api.dart';
 import '../theme.dart';
@@ -330,8 +331,10 @@ Future<bool> confirm(
 Future<void> shareInvite(Group group, String code) => SharePlus.instance.share(
   ShareParams(
     text:
-        'Rejoins mon groupe ${group.emoji} ${group.name} sur Déclic, le défi photo du jour entre potes ! '
-        'Code d\'invitation : $code',
+        'Rejoins mon groupe ${group.emoji} ${group.name} sur Déclic, le défi photo du jour entre potes !\n\n'
+        'Code d\'invitation : $code\n\n'
+        '📱 iPhone : ouvre ${AppConfig.webAppUrl} dans Safari, puis Partager → « Sur l\'écran d\'accueil »\n'
+        '🤖 Android : ${AppConfig.androidDownloadUrl}',
     subject: 'Rejoins-moi sur Déclic 📸',
   ),
 );

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -18,6 +19,9 @@ class NotificationService {
 
   final _plugin = FlutterLocalNotificationsPlugin();
   bool _ready = false;
+
+  /// Les rappels programmés n'existent que dans l'app Android (pas dans la version web).
+  bool get isSupported => !kIsWeb;
 
   static const _kEnabled = 'notif_enabled';
   static const _kHour = 'notif_hour';
@@ -41,6 +45,7 @@ class NotificationService {
     } catch (_) {
       tz.setLocalLocation(tz.getLocation('Europe/Paris'));
     }
+    if (!isSupported) return;
     try {
       await _plugin.initialize(
         settings: const InitializationSettings(android: AndroidInitializationSettings('@drawable/ic_notification')),
@@ -71,6 +76,7 @@ class NotificationService {
   }
 
   Future<bool> requestPermission() async {
+    if (!isSupported) return false;
     final android = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
     return await android?.requestNotificationsPermission() ?? true;
   }
