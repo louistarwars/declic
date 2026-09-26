@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -26,6 +28,8 @@ Future<void> main() async {
   runApp(const DeclicApp());
 }
 
+final navigatorKey = GlobalKey<NavigatorState>();
+
 class DeclicApp extends StatelessWidget {
   const DeclicApp({super.key});
 
@@ -33,6 +37,7 @@ class DeclicApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: AppConfig.appName,
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       theme: buildTheme(),
       locale: const Locale('fr', 'FR'),
@@ -47,20 +52,42 @@ class DeclicApp extends StatelessWidget {
   }
 }
 
-class AuthGate extends StatelessWidget {
+class AuthGate extends StatefulWidget {
   const AuthGate({super.key});
 
   @override
+  State<AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends State<AuthGate> {
+  final _auth = Supabase.instance.client.auth;
+  late final StreamSubscription<AuthState> _sub;
+
+  @override
+  void initState() {
+    super.initState();
+    _sub = _auth.onAuthStateChange.listen((state) {
+      if (state.event == AuthChangeEvent.passwordRecovery) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final ctx = navigatorKey.currentContext;
+          if (ctx != null) showDialog(context: ctx, builder: (_) => const NewPasswordDialog());
+        });
+      }
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _sub.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final auth = Supabase.instance.client.auth;
-    return StreamBuilder<AuthState>(
-      stream: auth.onAuthStateChange,
-      builder: (context, _) {
-        final session = auth.currentSession;
-        if (session == null) return const AuthScreen();
-        return HomeScreen(key: ValueKey(session.user.id));
-      },
-    );
+    final session = _auth.currentSession;
+    if (session == null) return const AuthScreen();
+    return HomeScreen(key: ValueKey(session.user.id));
   }
 }
 

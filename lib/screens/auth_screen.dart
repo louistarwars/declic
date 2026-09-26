@@ -272,3 +272,56 @@ class _Blobs extends StatelessWidget {
     );
   }
 }
+
+/// Affiché après un clic sur le lien « mot de passe oublié ».
+class NewPasswordDialog extends StatefulWidget {
+  const NewPasswordDialog({super.key});
+
+  @override
+  State<NewPasswordDialog> createState() => _NewPasswordDialogState();
+}
+
+class _NewPasswordDialogState extends State<NewPasswordDialog> {
+  final _password = TextEditingController();
+  bool _loading = false;
+
+  @override
+  void dispose() {
+    _password.dispose();
+    super.dispose();
+  }
+
+  Future<void> _save() async {
+    if (_password.text.length < 6) {
+      showMessage(context, '6 caractères minimum');
+      return;
+    }
+    setState(() => _loading = true);
+    try {
+      await Api.updatePassword(_password.text);
+      if (!mounted) return;
+      Navigator.pop(context);
+      showMessage(context, 'Mot de passe mis à jour 🔐');
+    } catch (e) {
+      if (mounted) {
+        showError(context, e);
+        setState(() => _loading = false);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Nouveau mot de passe', style: TextStyle(fontWeight: FontWeight.w900)),
+      content: TextField(
+        controller: _password,
+        obscureText: true,
+        autofocus: true,
+        decoration: const InputDecoration(labelText: 'Mot de passe'),
+        onSubmitted: (_) => _save(),
+      ),
+      actions: [TextButton(onPressed: _loading ? null : _save, child: const Text('Enregistrer'))],
+    );
+  }
+}

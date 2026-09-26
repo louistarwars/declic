@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../config.dart';
 import '../models.dart';
 import '../util.dart';
 
@@ -24,6 +25,7 @@ class Api {
     final res = await _db.auth.signUp(
       email: email.trim(),
       password: password,
+      emailRedirectTo: AppConfig.authRedirectUrl,
       data: {'username': username.trim(), 'avatar_emoji': avatarEmoji, 'avatar_color': avatarColor},
     );
     if (res.session == null) {
@@ -34,7 +36,10 @@ class Api {
   static Future<void> signIn(String email, String password) =>
       _db.auth.signInWithPassword(email: email.trim(), password: password);
 
-  static Future<void> resetPassword(String email) => _db.auth.resetPasswordForEmail(email.trim());
+  static Future<void> resetPassword(String email) =>
+      _db.auth.resetPasswordForEmail(email.trim(), redirectTo: AppConfig.authRedirectUrl);
+
+  static Future<void> updatePassword(String password) => _db.auth.updateUser(UserAttributes(password: password));
 
   static Future<void> signOut() => _db.auth.signOut();
 

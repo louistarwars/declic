@@ -10,4 +10,7 @@ class AppConfig {
   static const gameTimezone = 'Europe/Paris';
 
   static const appName = 'Déclic';
+
+  /// Lien profond vers l'app (à ajouter dans Supabase > Authentication > URL Configuration).
+  static const authRedirectUrl = 'com.louistarwars.declic://login-callback/';
 }

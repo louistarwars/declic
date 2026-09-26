@@ -29,8 +29,9 @@
 
 1. Crée un projet sur <https://supabase.com/dashboard>.
 2. **SQL Editor → New query** : colle le contenu de [`supabase/schema.sql`](supabase/schema.sql), puis clique sur **Run**.
-3. **Authentication → Sign In / Providers → Email** : désactive *Confirm email* pour que tes amis puissent jouer tout de suite (facultatif).
-4. **Project Settings → API** : récupère la *Project URL* et la clé *anon / publishable*.
+3. **Authentication → URL Configuration → Redirect URLs** : ajoute `com.louistarwars.declic://login-callback/` (liens « mot de passe oublié » et confirmation d'e-mail qui rouvrent l'app).
+4. **Authentication → Sign In / Providers → Email** : désactive *Confirm email* si tu veux que tes amis puissent jouer tout de suite (facultatif).
+5. **Project Settings → API** : récupère la *Project URL* et la clé *anon / publishable*.
 
 ### 2. Secrets GitHub
 
